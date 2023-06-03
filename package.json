@@ -1,0 +1,24 @@
+{
+  "name": "next-gql-dogs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.7.1",
+    "@as-integrations/next": "^2.0.0",
+    "@types/node": "20.2.5",
+    "@types/react": "18.2.8",
+    "@types/react-dom": "18.2.4",
+    "graphql": "^16.6.0",
+    "graphql-tag": "^2.12.6",
+    "next": "13.4.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "typescript": "5.1.3"
+  }
+}
