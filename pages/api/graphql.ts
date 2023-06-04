@@ -72,6 +72,11 @@ const resolvers = {
     addOrder(parent:any,args:Record<string,any>){
         //console.log(args);
         const {orderId,orderDate,userId,items}=args.orderInput;
+        const newOrder={orderId,
+            orderDate,
+            userId,
+            items}
+        orders.push(newOrder)
         return {
          orderId,
          orderDate,
