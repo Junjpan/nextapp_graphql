@@ -13,6 +13,10 @@ const typeDefs = gql`
     getAllOrders:[Order]
   }
 
+  type Mutation{
+    addOrder(orderInput:OrderInput):Order!
+  }
+
   type User {
     userId: Int,
     firstName: String,
@@ -33,6 +37,13 @@ const typeDefs = gql`
     itemId: Int,
     itemName: String,
     itemPrice: Float
+  }
+
+ input OrderInput{
+    orderId: Int,
+    orderDate: String!,
+    userId: Int!, 
+    items:[Int!]!
   }
   
 `;
@@ -57,21 +68,33 @@ const resolvers = {
         return orders
     } 
   }, 
+  Mutation:{
+    addOrder(parent:any,args:Record<string,any>){
+        //console.log(args);
+        const {orderId,orderDate,userId,items}=args.orderInput;
+        return {
+         orderId,
+         orderDate,
+         userId,
+         items
+        }
+    }
+  },
   User:{
-    orders(parent){
+    orders(parent:any){
         return orders.filter((order)=>order.userId===parent.userId)
     }},
   Order:{
-    user(parent){
+    user(parent:any){
         //console.log(parent)
         return users.find((user)=>user.userId===parent.userId)
     },
-    items(parent){
+    items(parent:any){
         return parent.items.map((itemId:number)=>{
            return items.find((item)=>item.itemId===itemId)
         })
     },
-    orderPrice(parent){
+    orderPrice(parent:any){
         return parent.items.map((itemId:number)=>{
             return items.find(item=>item.itemId===itemId)
         }).reduce((sum:number,item:ItemType)=>sum+item.itemPrice,0)
