@@ -1,8 +1,8 @@
 import { ApolloServer } from "@apollo/server";
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
 import { gql } from 'graphql-tag';
-import {users,orders,items} from "@/pages/data/dummyData";
-import type {GraphQLResolveInfo} from 'graphql'
+import {users,orders,items} from "@/data/dummyData";
+// import type {GraphQLResolveInfo} from 'graphql'
 
 //define schema
 const typeDefs = gql`
@@ -61,7 +61,8 @@ const resolvers = {
   Query: {
     sayHello: () => 'Hello World',
     sayBye:()=>'Say Bye',
-    getUser(parent:any, args:Record<string, any>, contextValue, info:GraphQLResolveInfo) {
+    //(parent:any, args:Record<string, any>, contextValue:any, info:GraphQLResolveInfo)
+    getUser(parent:any, args:Record<string, any>) {
         return users.find((user) => user.userId === args.userId);
       },
     getAllOrders() {
