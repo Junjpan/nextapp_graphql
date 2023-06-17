@@ -1,5 +1,3 @@
-"use client";
-
 import { Inter } from "next/font/google";
 import axios from "axios";
 
@@ -75,7 +73,7 @@ const addAnOrder = async (orderDate:string, orderId:number, userId:number, items
 
 };
 
-export default function Home() {
+export default  function Home() {
   fetchAllOrder();
   addAnOrder("2023-01-08T00:00:00Z",5555,1235,[2,2])
 
