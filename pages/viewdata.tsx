@@ -6,12 +6,12 @@ import Link from "next/link.js";
 
 interface UserData {
     id:number,
-    dataAdded:string,
+    dateAdded:string,
     city:string,
-    dateModified?:string,
+    dateModified:string,
     firstName:string,
     lastName:string,
-    phoneNumber?:string
+    phoneNumber:string
 }
 
 const ViewData = () => {
