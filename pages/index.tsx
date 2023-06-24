@@ -1,4 +1,5 @@
 import { Inter } from "next/font/google";
+import { useRouter } from "next/router";
 import axios from "axios";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -74,12 +75,15 @@ const addAnOrder = async (orderDate:string, orderId:number, userId:number, items
 };
 
 export default  function Home() {
-  fetchAllOrder();
-  addAnOrder("2023-01-08T00:00:00Z",5555,1235,[2,2])
+const router=useRouter();
+
 
   return (
     <main className={inter.className}>
-      <div>Fetch all orders</div>
+ 
+      <button onClick={()=>fetchAllOrder()}>Fetch all orders</button>
+      <button onClick={()=>addAnOrder("2023-01-08T00:00:00Z",5555,1235,[2,2])}>Add an Order</button>
+      <button onClick={()=>router.push('/viewdata')}>View User Data</button>
     </main>
   );
 }
