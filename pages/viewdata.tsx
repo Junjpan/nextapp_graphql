@@ -34,10 +34,7 @@ const ViewData = () => {
     }
   };
 
-  const headers = {
-    "content-type": "application/json",
-  };
-
+  
   const deleteItem = async (primaryKeyValue: number, sortKeyValue: string) => {
 
    

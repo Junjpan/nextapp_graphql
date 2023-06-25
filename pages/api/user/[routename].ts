@@ -3,6 +3,7 @@ import { ddbDocClient } from "@/config/ddbDocClient.js";
 import {
   ScanCommand,
   DeleteCommand,
+  PutCommand,
   ScanCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
 
@@ -58,7 +59,7 @@ export default async function handler(
             }
           })
         );
-        res.status(200).send('delete user data sucess!')
+        res.status(200).json('delete user data sucess!')
       } catch (err) {
         console.log(err)
       }
@@ -68,7 +69,15 @@ export default async function handler(
 
     }
 
-    case 'addUser': {
+    case 'createUser': {
+      try{
+       
+        const params=req.body
+        const data = await ddbDocClient.send(new PutCommand(params));
+        res.status(200).send('add data sucess')
+      }catch(err){
+        console.log('create user error',err)
+      }
       break;
     }
     case 'editUser': {

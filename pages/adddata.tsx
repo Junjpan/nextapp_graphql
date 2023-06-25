@@ -1,6 +1,7 @@
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import { ddbDocClient } from "../config/ddbDocClient";
 import { useRouter } from "next/router";
+import axios from "axios";
 
 
 const AddData = () => {
@@ -27,19 +28,41 @@ const AddData = () => {
     },
   };
     
- 
+  try{
 
-    try {
-      const data = await ddbDocClient.send(new PutCommand(params));
-      console.log("Success - item added", data);
-      alert("Data Added Successfully");
-      router.push("/viewdata");
-      const form= document.getElementById("addData-form") as HTMLFormElement
-      form.reset();
-    } catch (err:any) {
+    const headers = {
+      "content-type": "application/json",
+    };
+  
+    const options = {
+      method: "POST",
+      url: "/api/user/createUser",
+      headers,
+      data: params,
+    };
+
+    await axios(options);
+    router.push("/viewdata");
+    const form= document.getElementById("addData-form") as HTMLFormElement;
+    form.reset();
+
+  }catch(err){
+    console.log(err)
+  }
+ 
+//Infact, you can save data on the frontend as well as long as you get the accessID and accessssecret,but 
+//you don't want to set those information on the client side
+  //   try {
+  //     const data = await ddbDocClient.send(new PutCommand(params));
+  //     console.log("Success - item added", data);
+  //     alert("Data Added Successfully");
+  //     router.push("/viewdata");
+  //     const form= document.getElementById("addData-form") as HTMLFormElement
+  //     form.reset();
+  //   } catch (err:any) {
       
-      console.log("Error", err.stack);
-    }
+  //     console.log("Error", err.stack);
+  //   }
   };
   return (
     <>
