@@ -1,59 +1,55 @@
 // Import required AWS SDK clients and commands for Node.js.
 import { useEffect, useState } from "react";
 import { ddbDocClient } from "../config/ddbDocClient.js";
-import { ScanCommand, DeleteCommand, ScanCommandOutput } from "@aws-sdk/lib-dynamodb";
+import axios from "axios";
+import {
+  ScanCommand,
+  DeleteCommand,
+  ScanCommandOutput,
+} from "@aws-sdk/lib-dynamodb";
 import Link from "next/link.js";
+import { headers } from "next/dist/client/components/headers.js";
 
 interface UserData {
-    id:number,
-    dateAdded:string,
-    city:string,
-    dateModified:string,
-    firstName:string,
-    lastName:string,
-    phoneNumber:string
+  id: number;
+  dateAdded: string;
+  city: string;
+  dateModified: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
 }
 
 const ViewData = () => {
-  let data ;
+  let data;
   const [tableData, setTableData] = useState<UserData[]>([]);
 
-
-  //   scanning the dynamodb table
-  const scanTable = async () => {
+  const fetchData = async () => {
     try {
-      data = await ddbDocClient.send(new ScanCommand({ TableName: "Users" })) ;
-      let userData=data.Items as UserData[];
+      const data=await axios.get('/api/user/getAllUsers');
+      setTableData(data.data.data);
 
-        setTableData(userData);
-        console.log("success", data.Items);
-      
     } catch (err) {
-      console.log("Error", err);
+      console.log(err);
     }
   };
 
+  const headers = {
+    "content-type": "application/json",
+  };
 
-  const deleteItem = async (primaryKeyValue:number, sortKeyValue:string) => {
-    try {
-      await ddbDocClient.send(
-        new DeleteCommand({
-          TableName: "Users",
-          Key: {
-            id: primaryKeyValue, // primarykeyName : primaryKeyValue
-            dateAdded: sortKeyValue, // sortkeyName : sortkeyValue
-          },
-        })
-      );
-      console.log("Success - item deleted");
-      scanTable();
-    } catch (err) {
-      console.log("Error", err);
-    }
+  const deleteItem = async (primaryKeyValue: number, sortKeyValue: string) => {
+
+   
+    await axios.delete("/api/user/deleteUser",{params:{
+      id:primaryKeyValue,
+      dateAdded:sortKeyValue
+    }})
+    fetchData();
   };
 
   useEffect(() => {
-    scanTable();
+    fetchData();
   }, []);
 
   return (
