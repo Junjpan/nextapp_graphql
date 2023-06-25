@@ -6,6 +6,8 @@ In this repo:
 
 3.You can use postman to test the API. 
 
-4.Fetch and post data on the frontend by using graphql.
+4.Fetch and post data on the frontend by using graphql (index.tsx);
+
+5.Connect to DynamoDB (write,delete,view and update data)
 
 
