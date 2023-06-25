@@ -81,6 +81,10 @@ export default async function handler(
       break;
     }
     case 'editUser': {
+      const params=req.body;
+      const data = await ddbDocClient.send(new PutCommand(params));
+      // console.log('update',data)
+      res.status(200).send('update data sucess')
       break;
     }
 

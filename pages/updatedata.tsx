@@ -1,5 +1,6 @@
 import { ddbDocClient } from "../config/ddbDocClient";
 import { useRouter } from "next/router";
+import axios from "axios";
 import { PutCommand,UpdateCommand } from "@aws-sdk/lib-dynamodb";
 
 //there are a couple of way to update datas
@@ -53,9 +54,20 @@ const UpdateData = () => {
 
     // updating the db
     try {
-      const data = await ddbDocClient.send(new PutCommand(params));
-      console.log("Success - updated", data);
-      router.push('/viewdata')
+
+      const headers = {
+        "content-type": "application/json",
+      };
+    
+      const options = {
+        method: "PUT",
+        url: "/api/user/editUser",
+        headers,
+        data: params,
+      };
+  
+      await axios(options);
+      router.push("/viewdata");
     } catch (err) {
       console.log("Error", err);
     }
