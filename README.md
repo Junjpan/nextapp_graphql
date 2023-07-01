@@ -8,6 +8,6 @@ In this repo:
 
 4.Fetch and post data on the frontend by using graphql (index.tsx);
 
-5.Connect to DynamoDB (write,delete,view and update data)
+5.Connect to DynamoDB (write,delete,view and update data) thru next API
 
 
