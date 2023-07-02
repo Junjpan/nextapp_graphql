@@ -10,4 +10,6 @@ In this repo:
 
 5.Connect to DynamoDB (write,delete,view and update data) thru next API
 
+6. filter data by providing filter expression(you can see basic Syntax for filter and condition expressions inside the filterUser API);
+
 
