@@ -4,7 +4,7 @@ import {
   ScanCommand,
   DeleteCommand,
   PutCommand,
-  ScanCommandOutput,
+  UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 
 type Data = {
@@ -74,6 +74,7 @@ export default async function handler(
        
         const params=req.body
         const data = await ddbDocClient.send(new PutCommand(params));
+       // it won't return the inserted item
         res.status(200).send('add data sucess')
       }catch(err){
         console.log('create user error',err)
@@ -83,10 +84,52 @@ export default async function handler(
     case 'editUser': {
       const params=req.body;
       const data = await ddbDocClient.send(new PutCommand(params));
-      // console.log('update',data)
+
       res.status(200).send('update data sucess')
       break;
+    }
+    case 'filterUsers':{
+      const {city,dateAdded,firstname}=req.query;
+      const config={
+        TableName: "Users",
+        FilterExpression:'city= :cityName AND firstName= :firstname AND dateAdded< :datePrefix',//make sure the city and firstName match up the table field name
+        ExpressionAttributeValues:{
+          ":cityName":city,
+          ":datePrefix":dateAdded,
+          ":firstname":firstname
+        },
+        // ProjectionExpression:"id,firstName,lastName", //Specify the fields to be returned
+      //  Limit:2, //specify how many record will be returned
+      }
+
+ 
+      const data=await ddbDocClient.send(new ScanCommand(config));
+      let userData = data.Items as UserData[];
+   
+ 
+      res.status(200).send({ data: userData})
+      break
     }
 
   }
 }
+
+// AND firstname=:firstname AND dateAdded<=:dateAdded 
+
+//Example for scanCommand with filter
+// const params = {
+//   TableName: "orderMessages",
+//   Key: {
+//       order_id,
+      
+//   },
+//   FilterExpression: "#order_id = :ordrId OR #timestamp < :ts",
+//   ExpressionAttributeNames: {
+//       "#order_id": "order_id",
+//       "#timestamp": "timestamp"
+//     },
+//     ExpressionAttributeValues: {
+//       ":ordrId": order_id,
+//       ":ts": now
+//     },
+// }

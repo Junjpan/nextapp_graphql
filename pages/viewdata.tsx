@@ -26,28 +26,43 @@ const ViewData = () => {
 
   const fetchData = async () => {
     try {
-      const data=await axios.get('/api/user/getAllUsers');
+      const data = await axios.get("/api/user/getAllUsers");
       setTableData(data.data.data);
-
     } catch (err) {
       console.log(err);
     }
   };
 
-  
   const deleteItem = async (primaryKeyValue: number, sortKeyValue: string) => {
-
-   
-    await axios.delete("/api/user/deleteUser",{params:{
-      id:primaryKeyValue,
-      dateAdded:sortKeyValue
-    }})
+    await axios.delete("/api/user/deleteUser", {
+      params: {
+        id: primaryKeyValue,
+        dateAdded: sortKeyValue,
+      },
+    });
     fetchData();
   };
 
   useEffect(() => {
     fetchData();
   }, []);
+
+
+  const filterData=async(filterCityName:string):Promise<void>=>{
+    let data:UserData[];
+
+    try{
+      //if you put the date 07/01/2023, it won't work.
+     const data=await axios.get('/api/user/filterUsers',{
+      params:{city:filterCityName,dateAdded:"7/1/2023",firstname:"June"}
+     });
+
+     setTableData(data.data.data);
+    }catch(err){
+      console.log('filter Data err',err)
+    }
+
+  }
 
   return (
     <div>
@@ -59,6 +74,7 @@ const ViewData = () => {
         >
           <button type="button">Add Data</button>
         </Link>
+        <button type="button" onClick={()=>filterData("Anaheim")}>Filter Data By City</button>
       </div>
       <p>View Data</p>
       <div>
