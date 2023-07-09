@@ -24,6 +24,7 @@ const fetchAllOrder = async () => {
     variables: {},
   };
 
+  //you can go to localhost:3000/api/graphql and see the graphql playground
   const options = {
     method: "POST",
     url: "/api/graphql",
@@ -74,6 +75,12 @@ const addAnOrder = async (orderDate:string, orderId:number, userId:number, items
 
 };
 
+
+const createOrderThruDynamoDB=async()=>{
+  await axios.post("/api/order/createOrder");
+}
+
+
 export default  function Home() {
 const router=useRouter();
 
@@ -84,6 +91,7 @@ const router=useRouter();
       <button onClick={()=>fetchAllOrder()}>Fetch all orders</button>
       <button onClick={()=>addAnOrder("2023-01-08T00:00:00Z",5555,1235,[2,2])}>Add an Order</button>
       <button onClick={()=>router.push('/viewdata')}>View User Data</button>
+      <button onClick={createOrderThruDynamoDB}>Create an Order thru DynamoDB</button>
     </main>
   );
 }

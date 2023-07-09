@@ -45,7 +45,8 @@ export const params = {
     StreamViewType: "KEYS_ONLY",
   },
 };
-
+//you don't have to create other attributes schema, as soon as you add data with the attributes thru API, The table will be added with the new attributes.
+//as long as you have the keySchema attached
 const CreateTable = () => {
   const run = async () => {
     try {

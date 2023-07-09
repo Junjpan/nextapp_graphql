@@ -25,6 +25,7 @@ const AddData = () => {
       lastName: target.lastName.value,
       city:target.city.value,
       phoneNumber: target.phoneNumber.value,
+      email:"junjun@yahoo.com"
     },
   };
     
