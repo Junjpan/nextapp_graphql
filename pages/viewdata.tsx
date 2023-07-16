@@ -1,14 +1,7 @@
 // Import required AWS SDK clients and commands for Node.js.
 import { useEffect, useState } from "react";
-import { ddbDocClient } from "../config/ddbDocClient.js";
 import axios from "axios";
-import {
-  ScanCommand,
-  DeleteCommand,
-  ScanCommandOutput,
-} from "@aws-sdk/lib-dynamodb";
 import Link from "next/link.js";
-import { headers } from "next/dist/client/components/headers.js";
 
 interface UserData {
   id: number;
