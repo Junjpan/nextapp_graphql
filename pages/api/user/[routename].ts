@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { DynamoDBClient, TransactWriteItemsCommand,TransactGetItemsCommandInput,TransactWriteItem } from "@aws-sdk/client-dynamodb"
 import { ddbDocClient } from "@/config/ddbDocClient.js";
 import {
   ScanCommand,
@@ -6,6 +7,8 @@ import {
   PutCommand,
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
+import { ddbClient } from '@/config/dbconfig';
+
 
 type Data = {
   name: string
@@ -111,12 +114,66 @@ export default async function handler(
       break
     }
 
+    case 'batchUpdate':{
+      const config={
+        TableName: "Users",
+        FilterExpression:"city= :cityName",
+        ExpressionAttributeValues:{
+          ":cityName":"Anaheim city",
+        },
+      }
+
+      
+      const usersData=await ddbDocClient.send(new ScanCommand(config));
+      const users=usersData.Items as UserData[];
+      if(users.length===0){
+        res.status(200).send('No available data to be updated');
+        break;
+      }
+   
+      let transactItems: TransactWriteItem[]=[];
+      for (const user of users){
+        transactItems=[...transactItems,{
+          'Update':{
+            'ExpressionAttributeNames':{
+              "#CITY":'city'
+            },
+            'TableName':"Users",
+            'Key':{'id':{"N":user.id.toString()},"dateAdded":{"S":user.dateAdded}}, //if you have sort key, you have to included in here, otherwise it won't work
+            'UpdateExpression':"SET #CITY= :newCity",
+            'ExpressionAttributeValues':{
+              ":newCity":{
+                "S":"Anaheim"
+              }
+            }
+          }
+        }]
+      }
+
+      const transactWriteParams={TransactItems:[...transactItems]};
+
+      const client= new DynamoDBClient(ddbClient);
+      const command=new TransactWriteItemsCommand(transactWriteParams);
+
+  try {
+
+    const response = await client.send(command);
+    if (response) {
+      res.status(200).send('update success');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+
+     break
+    }
+
   }
 }
 
 // AND firstname=:firstname AND dateAdded<=:dateAdded 
 
-//Example for scanCommand with filter
+//Example for scanCommand with filter 
 // const params = {
 //   TableName: "orderMessages",
 //   Key: {
