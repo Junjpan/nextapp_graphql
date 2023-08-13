@@ -18,6 +18,7 @@ const fetchAllOrder = async () => {
           user{
             firstName
             lastName
+            userId
           } 
         }
     }`,
@@ -27,7 +28,7 @@ const fetchAllOrder = async () => {
   //you can go to localhost:3000/api/graphql and see the graphql playground
   const options = {
     method: "POST",
-    url: "/api/graphql",
+    url: "/api/file/s3",
     header,
     data: requestBody,
   };
@@ -36,7 +37,12 @@ const fetchAllOrder = async () => {
   console.log(response);
 };
 
-const addAnOrder = async (orderDate:string, orderId:number, userId:number, items:number[]) => {
+const addAnOrder = async (
+  orderDate: string,
+  orderId: number,
+  userId: number,
+  items: number[]
+) => {
   const requestBody = {
     query: `mutation AddOrder($orderDate:String!,$orderId:Int,$userId:Int!,$items:[Int!]!){
     addOrder(orderInput:{orderDate:$orderDate,orderId:$orderId,userId:$userId,items:$items}){
@@ -55,12 +61,12 @@ const addAnOrder = async (orderDate:string, orderId:number, userId:number, items
     }
   }`,
 
-  variables:{
-    orderDate,
-    orderId,
-    userId,
-    items
-  }
+    variables: {
+      orderDate,
+      orderId,
+      userId,
+      items,
+    },
   };
 
   const options = {
@@ -71,27 +77,29 @@ const addAnOrder = async (orderDate:string, orderId:number, userId:number, items
   };
 
   const response = await axios(options);
-  console.log('new order',response);
-
+  console.log("new order", response);
 };
 
-
-const createOrderThruDynamoDB=async()=>{
+const createOrderThruDynamoDB = async () => {
   await axios.post("/api/order/createOrder");
-}
+};
 
-
-export default  function Home() {
-const router=useRouter();
-
+export default function Home() {
+  const router = useRouter();
 
   return (
     <main className={inter.className}>
- 
-      <button onClick={()=>fetchAllOrder()}>Fetch all orders</button>
-      <button onClick={()=>addAnOrder("2023-01-08T00:00:00Z",5555,1235,[2,2])}>Add an Order</button>
-      <button onClick={()=>router.push('/viewdata')}>View User Data</button>
-      <button onClick={createOrderThruDynamoDB}>Create an Order thru DynamoDB</button>
+      <button onClick={() => fetchAllOrder()}>Fetch all orders</button>
+      <button
+        onClick={() => addAnOrder("2023-01-08T00:00:00Z", 5555, 1235, [2, 2])}
+      >
+        Add an Order
+      </button>
+      <button onClick={createOrderThruDynamoDB}>
+        Create an Order thru DynamoDB
+      </button>
+      <button onClick={() => router.push("/viewdata")}>View User Data</button>
+      <button onClick={() => router.push("/s3/upload")}>upload file</button>
     </main>
   );
 }

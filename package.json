@@ -12,6 +12,8 @@
     "@apollo/server": "^4.7.1",
     "@as-integrations/next": "^2.0.0",
     "@aws-sdk/client-dynamodb": "^3.354.0",
+    "@aws-sdk/client-s3": "^3.388.0",
+    "@aws-sdk/credential-providers": "^3.389.0",
     "@aws-sdk/lib-dynamodb": "^3.354.0",
     "@types/node": "20.2.5",
     "@types/react": "18.2.8",
