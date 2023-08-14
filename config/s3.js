@@ -1,11 +1,19 @@
 import { S3Client } from "@aws-sdk/client-s3";
+import { NodeHttpHandler } from "@aws-sdk/node-http-handler";
+import sts from "./sts";
+import https from "https";
 
-const s3Client = new S3Client({
+const requestHandler = new NodeHttpHandler({ httpsAgent: new https.Agent() });
+
+let client = new S3Client({
   region: "us-west-2",
-  credentials: {
-    accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_S3_ACCESS_SECRET_ACCESS_KEY,
-  },
+  credentials: sts.getCredentials(),
+  //   requestHandler, //I don't know when we need it.
 });
 
-export default s3Client;
+/**
+ * Get S3 client to make requests to S3
+ */
+const getClient = () => client;
+
+export default getClient;

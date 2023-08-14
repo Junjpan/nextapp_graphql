@@ -1,13 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { PutObjectCommand, PutObjectCommandInput } from "@aws-sdk/client-s3";
-import s3Client from "@/config/s3";
+import getClient from "@/config/s3";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
 
+
   const { fileData } = req.body;
+  const client = getClient();
 
   try {
     const input: PutObjectCommandInput = {
@@ -18,7 +20,7 @@ export default async function handler(
     };
 
     const command = new PutObjectCommand(input);
-    const data = await s3Client.send(command);
+    const data = await client.send(command);
     res.status(200).send('upload file success!')
   } catch (err) {
     console.log(err);
