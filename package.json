@@ -22,6 +22,8 @@
     "axios": "^1.4.0",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
+    "js-base64": "^3.7.5",
+    "mammoth": "^1.6.0",
     "next": "13.4.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
