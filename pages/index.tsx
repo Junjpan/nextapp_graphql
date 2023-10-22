@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import { useRouter } from "next/router";
 import axios from "axios";
+import styles from "../styles/index.module.scss";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +29,7 @@ const fetchAllOrder = async () => {
   //you can go to localhost:3000/api/graphql and see the graphql playground
   const options = {
     method: "POST",
-    url: "/api/file/s3",
+    url: "/api/order/getAllOrders",
     header,
     data: requestBody,
   };
@@ -93,13 +94,27 @@ export default function Home() {
       <button
         onClick={() => addAnOrder("2023-01-08T00:00:00Z", 5555, 1235, [2, 2])}
       >
-        Add an Order
+        Add an Order using Graphql
       </button>
       <button onClick={createOrderThruDynamoDB}>
         Create an Order thru DynamoDB
       </button>
       <button onClick={() => router.push("/viewdata")}>View User Data</button>
       <button onClick={() => router.push("/s3/upload")}>upload file</button>
+      <form className={styles.export}>
+        <label htmlFor="userID"></label>
+        <select id="userID">
+          <option value="734">June Pang</option>
+          <option value="7386">Serafina Pan</option>
+          <option value="6396">Sera Pang</option>
+          <option value="4563">Serafina test</option>
+          <option value="8419">Judy Brown</option>
+        </select>
+        <label htmlFor="items">
+          Please enter your purchase items and seperate them in comma
+        </label>
+        <input type="text" id="items"></input>
+      </form>
     </main>
   );
 }
