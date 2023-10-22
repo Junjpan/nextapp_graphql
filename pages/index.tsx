@@ -1,4 +1,5 @@
 import { Inter } from "next/font/google";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import styles from "../styles/index.module.scss";
@@ -85,8 +86,15 @@ const createOrderThruDynamoDB = async () => {
   await axios.post("/api/order/createOrder");
 };
 
+const submitAnOrder = (e: HTMLFormElement) => {
+  e.preventDefault();
+};
+
 export default function Home() {
   const router = useRouter();
+  const [items, setItems] = useState("");
+
+  console.log(items);
 
   return (
     <main className={inter.className}>
@@ -101,19 +109,38 @@ export default function Home() {
       </button>
       <button onClick={() => router.push("/viewdata")}>View User Data</button>
       <button onClick={() => router.push("/s3/upload")}>upload file</button>
-      <form className={styles.export}>
-        <label htmlFor="userID"></label>
-        <select id="userID">
-          <option value="734">June Pang</option>
-          <option value="7386">Serafina Pan</option>
-          <option value="6396">Sera Pang</option>
-          <option value="4563">Serafina test</option>
-          <option value="8419">Judy Brown</option>
-        </select>
+      <form className={styles.form} onSubmit={(e) => submitAnOrder(e)}>
+        <label htmlFor="userID">
+          Pick a user for purchasing the items:
+          <select
+            id="userID"
+            onChange={(e) => {
+              console.log(e.target.value);
+            }}
+          >
+            <option value="734">June Pang</option>
+            <option value="7386">Serafina Pan</option>
+            <option value="6396">Sera Pang</option>
+            <option value="4563">Serafina test</option>
+            <option value="8419">Judy Brown</option>
+          </select>
+        </label>
+
         <label htmlFor="items">
           Please enter your purchase items and seperate them in comma
+          <input
+            type="text"
+            id="items"
+            value={items}
+            onChange={(e) => {
+              setItems(e.target.value);
+            }}
+          ></input>
         </label>
-        <input type="text" id="items"></input>
+
+        <button type="button">
+          Make an order thru lambda-gatewayAPI-dynamodb function
+        </button>
       </form>
     </main>
   );

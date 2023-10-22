@@ -1,5 +1,21 @@
 $primary-color: black;
 
-.export {
+.form {
   color: $primary-color;
+  width: 80%;
+  background: white;
+  margin: 10rem auto;
+  padding: 2rem;
+  display: grid;
+  grid-template-rows: auto;
+  gap: 1rem;
+
+  label {
+    margin-bottom: 2rem;
+    font-weight: bold;
+    width: 100%;
+    input {
+      width: 100%;
+    }
+  }
 }
