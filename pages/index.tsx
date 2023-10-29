@@ -86,15 +86,38 @@ const createOrderThruDynamoDB = async () => {
   await axios.post("/api/order/createOrder");
 };
 
-const submitAnOrder = (e: HTMLFormElement) => {
+const submitAnOrder = async (
+  e: HTMLFormElement,
+  items: string,
+  userId: string
+) => {
   e.preventDefault();
+
+  const itemsArray = items.split(",");
+
+  const orderData = {
+    id: Math.floor(Math.random() * 1000),
+    orderDate: new Date().toLocaleString(),
+    userID: userId,
+    itemName: [...itemsArray],
+  };
+
+  //If you use different hosting name, make sure enable cors,see notes from notion.so->lambda->top five usage with lambda function->1. API gateway integration
+  //->API gateway DynamoDB, lambda integrate together->troubleshooting
+  const options = {
+    method: "POST",
+    url: "https://l2fkwix3o1.execute-api.us-west-2.amazonaws.com/order_stage/order",
+    data: orderData,
+  };
+
+  const response = await axios(options);
+  console.log("submit order data thru gateway API success", response);
 };
 
 export default function Home() {
   const router = useRouter();
   const [items, setItems] = useState("");
-
-  console.log(items);
+  const [userId, setUserId] = useState("");
 
   return (
     <main className={inter.className}>
@@ -109,13 +132,16 @@ export default function Home() {
       </button>
       <button onClick={() => router.push("/viewdata")}>View User Data</button>
       <button onClick={() => router.push("/s3/upload")}>upload file</button>
-      <form className={styles.form} onSubmit={(e) => submitAnOrder(e)}>
+      <form
+        className={styles.form}
+        onSubmit={(e) => submitAnOrder(e, items, userId)}
+      >
         <label htmlFor="userID">
           Pick a user for purchasing the items:
           <select
             id="userID"
             onChange={(e) => {
-              console.log(e.target.value);
+              setUserId(e.target.value);
             }}
           >
             <option value="734">June Pang</option>
@@ -138,7 +164,10 @@ export default function Home() {
           ></input>
         </label>
 
-        <button type="button">
+        <button
+          type="submit"
+          style={{ width: "500px", background: "black", color: "white" }}
+        >
           Make an order thru lambda-gatewayAPI-dynamodb function
         </button>
       </form>
