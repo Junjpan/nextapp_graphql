@@ -183,6 +183,7 @@ export default function Home() {
               position="popper"
               sideOffset={5}
               className={styles.SelectContent}
+              align="center"
             >
               <Select.ScrollUpButton>
                 <ChevronUpIcon />
