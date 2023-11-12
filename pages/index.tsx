@@ -1,6 +1,14 @@
-import { Inter } from "next/font/google";
+import React from "react";
+import classnames from "classnames";
+import { Inter } from "next/font/google"; //google font
 import { useState } from "react";
 import { useRouter } from "next/router";
+import * as Select from "@radix-ui/react-select";
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+} from "@radix-ui/react-icons";
 import axios from "axios";
 import styles from "../styles/index.module.scss";
 
@@ -114,6 +122,27 @@ const submitAnOrder = async (
   console.log("submit order data thru gateway API success", response);
 };
 
+interface ItemProp extends Select.SelectItemProps {
+  children?: React.ReactNode;
+  className?: string;
+}
+const SelectItem = React.forwardRef<HTMLDivElement, ItemProp>(
+  ({ children, className, ...props }, forwardedRef) => {
+    return (
+      <Select.Item
+        className={classnames("SelectItem", className)}
+        {...props}
+        ref={forwardedRef}
+      >
+        <Select.ItemText>{children}</Select.ItemText>
+        <Select.ItemIndicator className="SelectItemIndicator">
+          <CheckIcon />
+        </Select.ItemIndicator>
+      </Select.Item>
+    );
+  }
+);
+
 export default function Home() {
   const router = useRouter();
   const [items, setItems] = useState("");
@@ -136,21 +165,38 @@ export default function Home() {
         className={styles.form}
         onSubmit={(e) => submitAnOrder(e, items, userId)}
       >
-        <label htmlFor="userID">
-          Pick a user for purchasing the items:
-          <select
-            id="userID"
-            onChange={(e) => {
-              setUserId(e.target.value);
-            }}
-          >
-            <option value="734">June Pang</option>
-            <option value="7386">Serafina Pan</option>
-            <option value="6396">Sera Pang</option>
-            <option value="4563">Serafina test</option>
-            <option value="8419">Judy Brown</option>
-          </select>
-        </label>
+        <Select.Root
+          onValueChange={(value) => {
+            console.log(value);
+            setUserId(value);
+          }}
+          name="userId"
+        >
+          <Select.Trigger className="SelectTrigger" aria-label="userId">
+            <Select.Value placeholder="select a user" />
+            <Select.Icon className="SelectIcon">
+              <ChevronDownIcon />
+            </Select.Icon>
+          </Select.Trigger>
+          <Select.Portal>
+            <Select.Content
+              position="popper"
+              sideOffset={5}
+              className={styles.SelectContent}
+            >
+              <Select.ScrollUpButton>
+                <ChevronUpIcon />
+              </Select.ScrollUpButton>
+              <Select.Viewport>
+                <SelectItem value="734">June Pang</SelectItem>
+                <SelectItem value="7386">Serafina Pan</SelectItem>
+                <SelectItem value="6396">Sera Pang</SelectItem>
+                <SelectItem value="4563">Serafina test</SelectItem>
+                <SelectItem value="8419">Judy Brown</SelectItem>
+              </Select.Viewport>
+            </Select.Content>
+          </Select.Portal>
+        </Select.Root>
 
         <label htmlFor="items">
           Please enter your purchase items and seperate them in comma
