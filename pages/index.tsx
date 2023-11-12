@@ -87,7 +87,7 @@ const createOrderThruDynamoDB = async () => {
 };
 
 const submitAnOrder = async (
-  e: HTMLFormElement,
+  e: React.FormEvent<HTMLFormElement>,
   items: string,
   userId: string
 ) => {
